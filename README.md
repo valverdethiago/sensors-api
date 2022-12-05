@@ -47,10 +47,10 @@ make run
 ## Endpoints
 The following endpoints are available:
 * PUT http://localhost:8080/sensor - Creates a sensor
-* POST http://localhost:8080/sensor?name=<name> - Updates a sensor by its name
-* GET http://localhost:8080/sensor/<id> - Finds a sensor by its id
-* GET http://localhost:8080/sensor/<id>/tags - Returns the tags for the sensor with the given id
-* GET http://localhost:8080/sensor?name=<name> - Finds a sensor by the given name
-* GET http://localhost:8080/nearest?lat=<latitude>&long=<longitude> - Finds the nearest sensor given the coordinates
+* POST http://localhost:8080/sensor?name=[name] - Updates a sensor by its name
+* GET http://localhost:8080/sensor/[id] - Finds a sensor by its id
+* GET http://localhost:8080/sensor/[id]/tags - Returns the tags for the sensor with the given id
+* GET http://localhost:8080/sensor?name=[name] - Finds a sensor by the given name
+* GET http://localhost:8080/nearest?lat=[latitude]&long=[longitude] - Finds the nearest sensor given the coordinates
 
 You can find a complete Postman collection with calls for all these endpoints [here](./docs/Ping%20Thinks%20Homework.postman_collection.json)
