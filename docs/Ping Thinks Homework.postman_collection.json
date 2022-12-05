@@ -1,0 +1,258 @@
+{
+	"info": {
+		"_postman_id": "ccc25eca-85a8-415b-bd7c-bbfc908fb3a4",
+		"name": "Ping Thinks Homework",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20634038"
+	},
+	"item": [
+		{
+			"name": "[Sensor] Create",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sensor",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sensor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Sensor] Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sensor?name=My Custom Point",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sensor"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "My Custom Point"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Sensor] GetById",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sensor/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sensor",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "15959be8-2c1f-47f1-ab45-949faffe1d7e"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Sensor] GetTags",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sensor/:id/tags",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sensor",
+						":id",
+						"tags"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "15959be8-2c1f-47f1-ab45-949faffe1d7e"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Sensor] GetAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sensor",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sensor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Sensor] GetByName",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sensor?name=GKA-Goroka Airport",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sensor"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "GKA-Goroka Airport"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Sensor] Nearest",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Custom Point\",\n    \"location\": {\n        \"longitude\": -51.171398,\n        \"latitude\": -29.994400\n    },\n    \"tags\": [\n        {\n            \"name\": \"Name\",\n            \"value\": \"Value\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/nearest?lat=-29.9944&lon=-51.171398",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"nearest"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "-29.9944"
+						},
+						{
+							"key": "lon",
+							"value": "-51.171398"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

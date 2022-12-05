@@ -3,3 +3,6 @@ infra_up:
 
 infra_down:
 	docker-compose -f ./docker/docker-compose.yml  down
+
+run:
+	go run main.go
