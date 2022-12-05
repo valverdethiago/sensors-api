@@ -13,6 +13,7 @@ const (
 	sensorBasePath = "/sensor"
 	sensorIdPath   = "/sensor/:id"
 	sensorTagsPath = "/sensor/:id/tags"
+	nearestSensor  = "/nearest"
 )
 
 type Server struct {
@@ -44,7 +45,8 @@ func (server *Server) configureRoutes() {
 	server.router.GET(sensorBasePath, server.controller.Search)
 	server.router.GET(sensorIdPath, server.controller.GetById)
 	server.router.PUT(sensorBasePath, server.controller.Create)
-	server.router.POST(sensorIdPath, server.controller.Update)
+	server.router.POST(sensorBasePath, server.controller.Update)
+	server.router.GET(nearestSensor, server.controller.NearestSensor)
 	server.router.GET(sensorTagsPath, server.controller.GetTags)
 }
 

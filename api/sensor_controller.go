@@ -29,37 +29,14 @@ func NewSensorController(service domain.SensorService) SensorController {
 }
 
 func (controller *SensorController) Search(context *gin.Context) {
-	var coordinate *domain.Coordinate
-	var result *domain.Sensor
-	var err error
-	if coordinate, err = extractSearchParameters(context); err != nil {
-		return
+	name, hasName := context.GetQuery("name")
+	if hasName {
+		sensor, err := controller.service.SearchByName(name)
+		handleResult(context, sensor, err)
+	} else {
+		result, err := controller.service.GetAll()
+		handleResult(context, result, err)
 	}
-	if result, err = controller.service.FindNearestSensor(*coordinate); err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	if result != nil {
-		context.JSON(http.StatusOK, result)
-	}
-	context.Status(http.StatusNotFound)
-
-}
-
-func extractSearchParameters(context *gin.Context) (*domain.Coordinate, error) {
-	latitude, _ := context.GetQuery("lat")
-	longitude, _ := context.GetQuery("long")
-	lat, errLat := parse(&latitude)
-	lon, errLong := parse(&longitude)
-	if errLat != nil || errLong != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": invalidCoordinatesErrorMsg})
-		return nil, errors.New(invalidCoordinatesErrorMsg)
-	}
-
-	return &domain.Coordinate{
-		Latitude:  lat,
-		Longitude: lon,
-	}, nil
 
 }
 
@@ -91,24 +68,76 @@ func (controller *SensorController) Create(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if sensor.SensorUuid != nil {
+	if sensor.Id != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": idIsNotAllowedInSensorCreation})
 		return
 	}
-	tags := make([]domain.Tag, 0)
-	if sensor, err = controller.service.Create(sensor.Name, sensor.Location, tags); err != nil {
+	if sensor, err = controller.service.Create(sensor.Name, sensor.Location, *sensor.Tags); err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	context.JSON(http.StatusCreated, sensor)
 }
 
-func (controller *SensorController) Update(context *gin.Context) {
+func (controller *SensorController) NearestSensor(context *gin.Context) {
+	coordinate, err := extractCoordinatesFromQuery(context)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	sensor, distance, err := controller.service.FindNearestSensor(*coordinate)
 
+	handleResult(context, domain.NearestResponse{
+		Sensor:   *sensor,
+		Distance: distance,
+	}, err)
+}
+
+func (controller *SensorController) Update(context *gin.Context) {
+	name, hasName := context.GetQuery("name")
+	if !hasName {
+		context.Status(http.StatusBadRequest)
+	}
+	var sensor *domain.Sensor
+
+	if err := json.NewDecoder(context.Request.Body).Decode(&sensor); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	result, err := controller.service.Update(name, sensor.Name, sensor.Location, *sensor.Tags)
+	handleResult(context, result, err)
 }
 
 func (controller *SensorController) GetTags(context *gin.Context) {
+	var idHash uuid.UUID
+	var err error
+	var result *domain.Sensor
+	idHash, err = controller.extractIdFromContext(context)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	if result, err = controller.service.GetById(idHash); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if result == nil {
+		context.Status(http.StatusNotFound)
+	} else {
+		context.JSON(http.StatusOK, result.Tags)
+	}
+}
 
+func handleResult(context *gin.Context, result interface{}, err error) {
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if result == nil {
+		context.Status(http.StatusNotFound)
+		return
+	}
+	context.JSON(http.StatusOK, result)
+	return
 }
 
 func (controller *SensorController) extractIdFromContext(context *gin.Context) (idHash uuid.UUID, err error) {
@@ -120,6 +149,23 @@ func (controller *SensorController) extractIdFromContext(context *gin.Context) (
 		return idHash, errors.New(idIsRequiredErrorMsg)
 	}
 	return idHash, nil
+}
+
+func extractCoordinatesFromQuery(context *gin.Context) (*domain.Coordinate, error) {
+	latitude, _ := context.GetQuery("lat")
+	longitude, _ := context.GetQuery("lon")
+	lat, errLat := parse(&latitude)
+	lon, errLong := parse(&longitude)
+	if errLat != nil || errLong != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": invalidCoordinatesErrorMsg})
+		return nil, errors.New(invalidCoordinatesErrorMsg)
+	}
+
+	return &domain.Coordinate{
+		Latitude:  lat,
+		Longitude: lon,
+	}, nil
+
 }
 
 func parse(number *string) (float64, error) {

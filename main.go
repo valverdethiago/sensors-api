@@ -1,14 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 	"github.com/valverdethiago/sensors-api/adapters"
 	"github.com/valverdethiago/sensors-api/api"
 	"github.com/valverdethiago/sensors-api/config"
 	"github.com/valverdethiago/sensors-api/domain"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
 )
 
@@ -33,8 +33,8 @@ func configureService(repository domain.SensorRepository) domain.SensorService {
 	return domain.NewSensorServiceImpl(repository)
 }
 
-func configureRepository(db *gorm.DB) domain.SensorRepository {
-	return adapters.NewSensorGormRepository(db)
+func configureRepository(db *sql.DB) domain.SensorRepository {
+	return adapters.NewSensorSqlAdapter(db)
 }
 
 func configureServer(config config.ServerConfig, controller api.SensorController) *api.Server {
@@ -51,11 +51,11 @@ func loadAppConfig() *config.AppConfig {
 	}
 	return cfg
 }
-func connectToDatabase(cfg config.DatabaseConfig) *gorm.DB {
+func connectToDatabase(cfg config.DatabaseConfig) *sql.DB {
 	dsn := fmt.Sprintf(DatabaseDsnLayout, cfg.Host, cfg.Username, cfg.Name, cfg.Port)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		log.Fatal("Error connecting to the database")
+		log.Fatal("Error connecting to the database", err)
 	}
 	return db
 }

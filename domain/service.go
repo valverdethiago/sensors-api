@@ -4,10 +4,12 @@ import "github.com/google/uuid"
 
 type SensorService interface {
 	Create(name string, location Coordinate, tags []Tag) (*Sensor, error)
-	Update(name string, location Coordinate, tags []Tag) (*Sensor, error)
+	Update(name string, newName string, location Coordinate, tags []Tag) (*Sensor, error)
 	GetByName(name string) (*Sensor, error)
 	GetById(uuid uuid.UUID) (*Sensor, error)
-	FindNearestSensor(coordinate Coordinate) (*Sensor, error)
+	FindNearestSensor(coordinate Coordinate) (*Sensor, float64, error)
+	SearchByName(name string) (*Sensor, error)
+	GetAll() ([]Sensor, error)
 }
 
 type SensorServiceImpl struct {
@@ -27,31 +29,8 @@ func (s SensorServiceImpl) Create(name string, location Coordinate, tags []Tag) 
 	return sensor, nil
 }
 
-func (s SensorServiceImpl) Update(name string, location Coordinate, tags []Tag) (sensor *Sensor, err error) {
-	if sensor, err = s.repository.Update(name, location); err != nil {
-		return nil, err
-	}
-	if err = s.repository.ClearTags(sensor); err != nil {
-		return nil, err
-	}
-	if err = s.persistTags(sensor, tags); err != nil {
-		return nil, err
-	}
-	return sensor, nil
-
-}
-
-func (s SensorServiceImpl) persistTags(sensor *Sensor, tags []Tag) error {
-	result := make([]Tag, len(tags))
-	for i, tag := range tags {
-		dbTag, err := s.repository.CreateTag(sensor, tag.Name, tag.Value)
-		if err != nil {
-			return err
-		}
-		result[i] = *dbTag
-	}
-	//sensor.Tags = result
-	return nil
+func (s SensorServiceImpl) Update(name string, newName string, location Coordinate, tags []Tag) (sensor *Sensor, err error) {
+	return s.repository.Update(name, newName, location, tags)
 }
 
 func (s SensorServiceImpl) GetByName(name string) (*Sensor, error) {
@@ -62,6 +41,14 @@ func (s SensorServiceImpl) GetById(uuid uuid.UUID) (*Sensor, error) {
 	return s.repository.GetById(uuid)
 }
 
-func (s SensorServiceImpl) FindNearestSensor(coordinate Coordinate) (*Sensor, error) {
+func (s SensorServiceImpl) FindNearestSensor(coordinate Coordinate) (*Sensor, float64, error) {
 	return s.repository.FindNearestSensor(coordinate)
+}
+
+func (s SensorServiceImpl) SearchByName(name string) (*Sensor, error) {
+	return s.repository.GetByName(name)
+}
+
+func (s SensorServiceImpl) GetAll() ([]Sensor, error) {
+	return s.repository.GetAll()
 }
