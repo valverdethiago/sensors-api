@@ -54,3 +54,10 @@ The following endpoints are available:
 * GET http://localhost:8080/nearest?lat=[latitude]&long=[longitude] - Finds the nearest sensor given the coordinates
 
 You can find a complete Postman collection with calls for all these endpoints [here](./docs/Ping%20Thinks%20Homework.postman_collection.json)
+
+# Next steps
+For the application to be considered production ready I would work in the following items:
+* Implement unit tests for at least the SensorService
+* Implement integration tests with test containers to test the whole end to end flow
+* Implement a search by name with pagination and sort
+* Create deployment manifest for k8s or any other container orchestration tool.
